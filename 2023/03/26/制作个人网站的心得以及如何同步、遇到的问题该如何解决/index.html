@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="Suika">
+
+
+  <meta name="subtitle" content="记录下生活中的点点滴滴">
+
+
+
+
+<title>制作个人网站的心得以及如何同步、遇到的问题该如何解决 | Prolunar</title>
+
+
+
+<link rel="icon" href="/favicon.png">
+
+
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/lib/tocbot/tocbot.min.css">
+
+
+
+<script src="/lib/jquery.min.js"></script>
+
+
+<script src="/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography,line-clamp"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+  }
+</script>
+
+
+<script src="/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+  })();
+  window.onload = function () {
+    // init iconify icon
+    const isDark = document.documentElement.classList.contains("dark");
+    if (isDark) {
+      $("#toggle-dark").attr("icon", "ri:moon-line");
+    } else {
+      $("#toggle-dark").attr("icon", "ri:sun-line");
+    }
+
+    const toggleDark = () => {
+      console.log("toggle dark");
+      const darkMode = document.documentElement.classList.toggle("dark");
+      localStorage.setItem("hexo-color-scheme", darkMode ? "dark" : "light");
+      $("#toggle-dark").attr("icon", darkMode ? "ri:moon-line" : "ri:sun-line");
+    };
+
+    $("#toggle-dark").click(toggleDark);
+  };
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" src="/images/logo.svg" alt="Prolunar" />
+          Prolunar
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        'category'
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/archives">Posts</a>
+        
+          <a class="hidden sm:flex" href="/category">Categories</a>
+        
+          <a class="hidden sm:flex" href="/tag">Tags</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/Prolunar">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Weibo" target="_blank" rel="noopener" href="https://weibo.com/lusirui">
+              <iconify-icon width="20" icon="ri:weibo-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5" title="toggle theme">
+          <iconify-icon width="20" icon="ri:sun-line" id="toggle-dark"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/category" class="flex h-12 sm:h-auto items-center">Categories</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/tag" class="flex h-12 sm:h-auto items-center">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="p-12">
+    <!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        制作个人网站的心得以及如何同步、遇到的问题该如何解决
+      </h1>
+      <p class="mb-6">
+        
+      </p>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <time>2023-08-11 01:42:28</time>
+          <span class="text-gray-400">·</span>
+          <span>8 min</span>
+          <span class="text-gray-400">·</span>
+          <span>2.1k words</span>
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content mt-10 prose dark:prose-invert post-content">
+    <p>花了一个晚上＋一下午的时间终于把个人网站做好了。外行人做东西就是难，只能照葫芦画瓢，反正最后解决了就行。下次也不一定做的出来了哈哈哈哈趁着自己还没忘赶紧留个档。</p>
+<h2 id="1-前期准备"><a href="#1-前期准备" class="headerlink" title="1.前期准备"></a>1.前期准备</h2><p>想要搭建服务器首先需要把环境配置好</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Hexo官网：https://hexo.io/zh-cn/index.html</span></span><br><span class="line"><span class="comment">#Git 官网: https://git-scm.com/</span></span><br><span class="line"><span class="comment">#Node.js官网：https://nodejs.org/zh-cn/</span></span><br></pre></td></tr></table></figure>
+
+<p>安装完<code>Node.js</code>后打开cmd输入<code>node -v</code>查看版本号检查是否安装成功</p>
+<h2 id="2-部署HEXO"><a href="#2-部署HEXO" class="headerlink" title="2.部署HEXO"></a>2.部署HEXO</h2><p>打开一个文件夹，右键鼠标选择<code>Git Bash Here</code></p>
+<p>依次输入代码</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-cli -g</span><br><span class="line">$ hexo init blog</span><br><span class="line">$ <span class="built_in">cd</span> blog</span><br><span class="line">$ npm install</span><br><span class="line">$ hexo s</span><br></pre></td></tr></table></figure>
+
+<p>这时代码跑完，以及有本地网页了，通过<code>http://localhost:4000/</code> （每个人端口号可能不一样）即可访问</p>
+<p>创建新网页使用代码</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new <span class="string">&quot;新网页的名称&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>之后在<code>blog</code>文件夹中的<code>\source\_posts</code>即可访问</p>
+<p><code>hexo</code>的常用命令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hexo cl <span class="comment">#删除public文件夹</span></span><br><span class="line">hexo g <span class="comment">#生产public文件夹</span></span><br><span class="line">hexo s <span class="comment">#在本地启动服务</span></span><br><span class="line">hexo d <span class="comment">#在本地生成.deploy_git文件夹，并将编译后的文件上传至 GitHub</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-更改网站样式"><a href="#3-更改网站样式" class="headerlink" title="3.更改网站样式"></a>3.更改网站样式</h2><p>进入<code>hexo</code>官网底部点击<code>探索主题</code></p>
+<p>选择一个喜欢的样式点进作者的<code>Github</code>中学习怎样部署</p>
+<p>以我选择的<code>Maple</code>为例：</p>
+<p>在<code>blog</code>文件夹中右键鼠标选择<code>Git Bash Here</code></p>
+<p>直接输入代码即可：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/xbmlz/hexo-theme-maple.git themes/maple</span><br></pre></td></tr></table></figure>
+
+
+
+<p>之后在<code>blog</code>中找到<code>_config.yml</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- theme: some-theme <span class="comment">//把这个</span></span><br><span class="line">+ theme: maple <span class="comment">//改成这个</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>之后在<code>blog\themes\maple</code>中通过<code>_config.yml</code>修改相关细节</p>
+<h2 id="4-发布到Github"><a href="#4-发布到Github" class="headerlink" title="4.发布到Github"></a>4.发布到Github</h2><p>先在自己的<code>Github</code>创建一个新的 <code>repository</code>命名为：<code>&lt;username&gt;.github.io</code></p>
+<p>创建完新的 <code>repository</code>后会有 <code>HTTPS/SSH</code> 地址，我们选择<code>git</code>地址如：</p>
+<p><code>https://github.com/your_username/your_reponame.git</code></p>
+<p>直接对着任意地方右键鼠标选择<code>Git Bash Here</code></p>
+<p>安装部署插件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br><span class="line">npm install hexo-server --save</span><br></pre></td></tr></table></figure>
+
+<p>接着配置一下<code>Git</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;Your_user_name&quot;</span></span><br><span class="line">git config --global user.email Your_email@example.com</span><br></pre></td></tr></table></figure>
+
+<p>再输入：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">&quot;Your_email@example.com&quot;</span></span><br><span class="line"><span class="comment">#按回车就完事了</span></span><br></pre></td></tr></table></figure>
+
+<p>然后输入以下代码获取<code>密钥</code>：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
+
+<p>得到一大串长长的<code>密钥</code>，回到<code>Github</code>中进入<code>设置</code>、<code>SSH</code></p>
+<p>点击<code>New SSH key</code>随便取个名然后粘贴进去就行了，可能会让输入密码，都比较简单。</p>
+<p>之后回到<code>Git</code>窗口验证是否成功</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ssh -T git@github.com</span><br><span class="line"><span class="comment">#出现Successfully就完事了</span></span><br></pre></td></tr></table></figure>
+
+<p>回到<code>blog</code>根目录中找到<code>_config.yml</code>输入与自己账号对应内容</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment"># URL</span></span><br><span class="line">  <span class="comment"># If your site is put in a subdirectory, set url as &#x27;http://yoursite.com/child&#x27; and root as &#x27;/child/&#x27;</span></span><br><span class="line">  url: https://&lt;username&gt;.github.io <span class="comment">#这里输入刚刚设置的网站</span></span><br><span class="line">  root: /</span><br><span class="line">  permalink: :year/:month/:day/:title/</span><br><span class="line">  permalink_defaults:</span><br><span class="line"> <span class="comment"># Deployment </span></span><br><span class="line"> <span class="comment">## Docs: https://hexo.io/docs/deployment.html</span></span><br><span class="line">deploy:</span><br><span class="line">  <span class="built_in">type</span>: git          </span><br><span class="line">  repo: https://github.com/&lt;username&gt;/&lt;username&gt;.github.io.git  <span class="comment">#这里把username换了对着输入就行</span></span><br><span class="line">  branch: main <span class="comment">#注意github的默认branch换成了main，要把master改为main才行</span></span><br></pre></td></tr></table></figure>
+
+<p>设置好之后直接在<code>blog</code>根目录右键鼠标选择<code>Git Bash Here</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo d</span><br><span class="line"><span class="comment">#即可把本地网页部署到Github</span></span><br></pre></td></tr></table></figure>
+
+<p>OK，到这一步直接输入之前设置的：<code>&lt;username&gt;.github.io</code></p>
+<p>是不是就能看到自己的网站了？</p>
+<h2 id="5-开启评论系统"><a href="#5-开启评论系统" class="headerlink" title="5.开启评论系统"></a>5.开启评论系统</h2><p>评论系统在我的主题中是基于<code>Giscus</code>实现的</p>
+<p>想要使用<code>Giscus</code>需要满足以下条件:</p>
+<ul>
+<li>仓库公开</li>
+<li>Giscus已安装</li>
+<li>Giscus功能对仓库启用</li>
+</ul>
+<p>满足后进入<a target="_blank" rel="noopener" href="https://giscus.app/zh-CN">Giscus官网</a></p>
+<p>在仓库中输入<code>blog</code>在<code>Github</code>的仓库名如<code>myusername/myrepo</code></p>
+<p>此处直接复制会有俩空格导致不符合，一定注意下，我在这边吃亏找了一个多小时解决方法。。。</p>
+<p>下面建议选择<code>URL</code></p>
+<p>然后直接将<code>Giscus</code>给你的配置复制到主题的设置文件中即可：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=&quot;https://giscus.app/client.js&quot;</span><br><span class="line">        data-repo=&quot;[在此输入仓库]&quot;</span><br><span class="line">        data-repo-id=&quot;[在此输入仓库 ID]&quot;</span><br><span class="line">        data-category=&quot;[在此输入分类名]&quot;</span><br><span class="line">        data-category-id=&quot;[在此输入分类 ID]&quot;</span><br><span class="line">        data-mapping=&quot;pathname&quot;</span><br><span class="line">        data-strict=&quot;0&quot;</span><br><span class="line">        data-reactions-enabled=&quot;1&quot;</span><br><span class="line">        data-emit-metadata=&quot;0&quot;</span><br><span class="line">        data-input-position=&quot;bottom&quot;</span><br><span class="line">        data-theme=&quot;preferred_color_scheme&quot;</span><br><span class="line">        data-lang=&quot;zh-CN&quot;</span><br><span class="line">        crossorigin=&quot;anonymous&quot;</span><br><span class="line">        async&gt;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="6-多端同步"><a href="#6-多端同步" class="headerlink" title="6.多端同步"></a>6.多端同步</h2><p>多端同步使用<code>Github</code>的<code>分支系统</code>实现</p>
+<p>每次同步本地到<code>Github</code>其实只会同步<code>.deploy_git</code>文件夹内的东西，源文件并没有上传</p>
+<p>现在<code>Github</code>中创建一个<code>branch</code>命名为<code>hexo</code></p>
+<p>接着在你的仓库设置里把<code>hexo</code>改为默认分支</p>
+<p>在任意目录下右键鼠标选择<code>Git Bash Here</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@github.com:&lt;username&gt;/&lt;username&gt;.github.io.git</span><br></pre></td></tr></table></figure>
+
+<p>把<code>hexo</code>的内容<code>clone</code>到本地，之后在本地<code>&lt;username&gt;.github.io</code>文件夹中把除了<code>.git</code>之外的文件都删了</p>
+<p>然后把之前网站的源文件除了<code>.deploy_git</code>全部复制过来就行了，另外主题文件夹中的<code>.git</code>需要删掉</p>
+<p>复制过来的源文件应该有一个<code>.gitignore</code>，用来忽略一些不需要的文件，如果没有的话，自己新建一个，在里面写上如下，表示这些类型文件不需要<code>git</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">.DS_Store</span><br><span class="line">Thumbs.db</span><br><span class="line">db.json</span><br><span class="line">*.log</span><br><span class="line">node_modules/</span><br><span class="line">public/</span><br><span class="line">.deploy*/</span><br></pre></td></tr></table></figure>
+
+<p>复制好之后直接在这个文件夹中右键鼠标选择<code>Git Bash Here</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit –m <span class="string">&quot;add branch&quot;</span></span><br><span class="line">git push </span><br></pre></td></tr></table></figure>
+
+<p>这样<code>hexo</code>分支里应该都上传上了源文件。其中<code>node_modules</code>、<code>public</code>、<code>db.json</code>已经被忽略掉了，没有关系，不需要上传的，因为在别的电脑上需要重新输入命令安装 。</p>
+<p>之后每次写完都记得同步一下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">hexo cl</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br><span class="line">git add .</span><br><span class="line">git commit –m <span class="string">&quot;...&quot;</span></span><br><span class="line">git push </span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="后面需要在别的电脑上下载文件只需要以下步骤："><a href="#后面需要在别的电脑上下载文件只需要以下步骤：" class="headerlink" title="后面需要在别的电脑上下载文件只需要以下步骤："></a>后面需要在别的电脑上下载文件只需要以下步骤：</h3><ul>
+<li>安装<code>git</code></li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install git</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置<code>git</code>全局邮箱和用户名</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;Your_user_name&quot;</span></span><br><span class="line">git config --global user.email Your_email@example.com</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置<code>ssh key</code></li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">&quot;youremail&quot;</span></span><br><span class="line"><span class="comment">#验证是否成功</span></span><br><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>安装<code>nodejs</code></li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install nodejs</span><br><span class="line">sudo apt-get install npm</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>安装<code>hexo</code></li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo npm install hexo-cli -g</span><br></pre></td></tr></table></figure>
+
+<p>但是已经不需要初始化了，</p>
+<p>直接在任意文件夹下，</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git @………………</span><br></pre></td></tr></table></figure>
+
+<p>然后进入克隆到的文件夹：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> xxx.github.io</span><br><span class="line">npm install</span><br><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+<p>生成，部署：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+
+<p>然后就可以开始写你的新博客了</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new newpage</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>Tips:</strong></p>
+<ol>
+<li>不要忘了，每次写完最好都把源文件上传一下</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit –m <span class="string">&quot;xxxx&quot;</span></span><br><span class="line">git push </span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>如果是在已经编辑过的电脑上，已经有<code>clone</code>文件夹了，那么，每次只要和远端同步一下就行了</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="7-遇到的问题"><a href="#7-遇到的问题" class="headerlink" title="7.遇到的问题"></a>7.遇到的问题</h2><h3 id="Tags与Categories页面不显示"><a href="#Tags与Categories页面不显示" class="headerlink" title="Tags与Categories页面不显示"></a>Tags与Categories页面不显示</h3><p>在<code>blog</code>文件夹中右键鼠标选择<code>Git Bash Here</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new page tags <span class="comment">#新建tags页面</span></span><br></pre></td></tr></table></figure>
+
+<p>然后会在<code>hexo</code>下的<code>source</code>目录看到<code>tags</code>文件夹，在<code>index.md</code>里输入</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: tags</span><br><span class="line">date: <span class="number">2020</span>-<span class="number">01</span>-<span class="number">10</span> <span class="number">16</span>:<span class="number">14</span>:<span class="number">33</span></span><br><span class="line">type: <span class="string">&quot;tags&quot;</span></span><br><span class="line">layout: <span class="string">&quot;tags&quot;</span>   <span class="comment">//增加tags的布局</span></span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
+<p>然后再用同样的方法，新建一个<code>categories</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new page categories <span class="comment">#新建categories页面</span></span><br></pre></td></tr></table></figure>
+
+<p>然后配置<code>categories</code> 文件夹下的<code>index.md</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: categories</span><br><span class="line">date: <span class="number">2020</span>-<span class="number">01</span>-<span class="number">10</span> <span class="number">16</span>:<span class="number">15</span>:<span class="number">43</span></span><br><span class="line">type: <span class="string">&quot;categories&quot;</span></span><br><span class="line">layout: <span class="string">&quot;categories&quot;</span>    <span class="comment">//增加categories的布局</span></span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
+<p>另外如果不想要每次新增文章都要输入一次<code>categories</code>与<code>tags</code>，可以修改<code>scaffolds/post.md</code></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">title: &#123;&#123; title &#125;&#125;</span><br><span class="line">date: &#123;&#123; date &#125;&#125;</span><br><span class="line">categories: &#123;&#123; categories &#125;&#125;</span><br><span class="line">tags: &#123;&#123; tags &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>写文章时对于<code>categories</code>与<code>tags</code>的定义如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: 标签</span><br><span class="line">date: <span class="number">2018</span>-<span class="number">10</span>-<span class="number">10</span> <span class="number">12</span>:<span class="number">21</span>:<span class="number">48</span></span><br><span class="line">categories: [分类] <span class="comment">//注意分类只能有一个</span></span><br><span class="line">tags: [tag1，tag2] <span class="comment">//中间用英文逗号隔开</span></span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
+<h3 id="部署后，部分页面-404"><a href="#部署后，部分页面-404" class="headerlink" title="部署后，部分页面 404"></a>部署后，部分页面 404</h3><p>部分情况下，在初次部署之后，部分文章或者页面路径大小如果更改了，会导致新部署上去的页面出现 404 错误。 这是由于<code>Git</code>没有区分大小写导致的文件路径错误。修改<code>hexo</code>根目录<code>/.deploy_git/.git/</code>下的<code>config</code>文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[core]</span><br><span class="line">	repositoryformatversion = 0</span><br><span class="line">	filemode = false</span><br><span class="line">	bare = false</span><br><span class="line">	logallrefupdates = false</span><br><span class="line">	symlinks = false</span><br><span class="line">-	ignorecase = true</span><br><span class="line">+   ignorecase = false</span><br><span class="line">[branch &quot;master&quot;]</span><br><span class="line">	remote = ueser_name@HostIP:/var/repo/blog.git</span><br><span class="line">	merge = refs/heads/master</span><br></pre></td></tr></table></figure>
+
+<p>我用以上方法没解决，最后通过删除<code>hexo</code>目录下的<code>.deploy_git</code>文件夹后重新部署解决。</p>
+<blockquote>
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1ts4y1f7Gu">https://www.bilibili.com/video/BV1ts4y1f7Gu</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1cW411A7Jx">https://www.bilibili.com/video/BV1cW411A7Jx</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/21193762/answer/489124966">https://www.zhihu.com/question/21193762/answer/489124966</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/yinjiangQAQ/article/details/103951416">https://blog.csdn.net/yinjiangQAQ/article/details/103951416</a></p>
+<p><a target="_blank" rel="noopener" href="https://kemushi54.github.io/">https://kemushi54.github.io/</a></p>
+<p><a target="_blank" rel="noopener" href="https://xring.net/">https://xring.net/</a></p>
+<p><a target="_blank" rel="noopener" href="https://easyhexo.com/">https://easyhexo.com/</a></p>
+</blockquote>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/hexo/">hexo</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/%E7%BD%91%E7%AB%99/">网站</a>
+        </span>
+      
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+        <a href="/2023/04/11/%E5%A6%82%E4%BD%95%E5%88%B6%E4%BD%9C%E4%B8%AA%E4%BA%BA%E5%9B%BE%E5%BA%8A/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
+          如何制作个人图床
+        </a>
+      
+    </div>
+    <div>
+      
+        <a href="/2023/03/26/%E4%B8%8A%E5%A4%B4%E4%BA%86/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          上头了
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+<script src="https://giscus.app/client.js"
+        data-repo="Prolunar/Giscus"
+        data-repo-id="R_kgDOJORYIg"
+        data-category="General"
+        data-category-id="DIC_kwDOJORYIs4CVJRk"
+        data-mapping="url"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+  </div>
+</section>
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitor Count</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Totalview</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <span>© 2022</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/xbmlz" target="_blank" rel="noopener noreferrer">xbmlz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/xbmlz/hexo-theme-maple" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <iconify-icon class="fixed right-4 bottom-10 z-100 opacity-0" width="24" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+  
+<script src="/lib/clipboard.min.js"></script>
+
+
+
+<script src="/js/main.js"></script>
+
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+</body>
+
+</html>

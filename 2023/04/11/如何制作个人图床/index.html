@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="Suika">
+
+
+  <meta name="subtitle" content="记录下生活中的点点滴滴">
+
+
+
+
+<title>如何制作个人图床 | Prolunar</title>
+
+
+
+<link rel="icon" href="/favicon.png">
+
+
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/lib/tocbot/tocbot.min.css">
+
+
+
+<script src="/lib/jquery.min.js"></script>
+
+
+<script src="/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography,line-clamp"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+  }
+</script>
+
+
+<script src="/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+  })();
+  window.onload = function () {
+    // init iconify icon
+    const isDark = document.documentElement.classList.contains("dark");
+    if (isDark) {
+      $("#toggle-dark").attr("icon", "ri:moon-line");
+    } else {
+      $("#toggle-dark").attr("icon", "ri:sun-line");
+    }
+
+    const toggleDark = () => {
+      console.log("toggle dark");
+      const darkMode = document.documentElement.classList.toggle("dark");
+      localStorage.setItem("hexo-color-scheme", darkMode ? "dark" : "light");
+      $("#toggle-dark").attr("icon", darkMode ? "ri:moon-line" : "ri:sun-line");
+    };
+
+    $("#toggle-dark").click(toggleDark);
+  };
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" src="/images/logo.svg" alt="Prolunar" />
+          Prolunar
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        'category'
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/archives">Posts</a>
+        
+          <a class="hidden sm:flex" href="/category">Categories</a>
+        
+          <a class="hidden sm:flex" href="/tag">Tags</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/Prolunar">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Weibo" target="_blank" rel="noopener" href="https://weibo.com/lusirui">
+              <iconify-icon width="20" icon="ri:weibo-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5" title="toggle theme">
+          <iconify-icon width="20" icon="ri:sun-line" id="toggle-dark"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/category" class="flex h-12 sm:h-auto items-center">Categories</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/tag" class="flex h-12 sm:h-auto items-center">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="p-12">
+    <!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        如何制作个人图床
+      </h1>
+      <p class="mb-6">
+        
+      </p>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <time>2023-08-11 01:42:28</time>
+          <span class="text-gray-400">·</span>
+          <span>2 min</span>
+          <span class="text-gray-400">·</span>
+          <span>663 words</span>
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content mt-10 prose dark:prose-invert post-content">
+    <h2 id="一、前期准备"><a href="#一、前期准备" class="headerlink" title="一、前期准备"></a>一、前期准备</h2><p>之前一直在写纯文字,也想像别人一样能加上一些图片在文档中,于是去学习了如何制作图床,本次使用的是<code>GitHub</code>+<code>PicGo</code>+<code>jsdelivr</code>,效果还蛮不错</p>
+<p>前期没什么准备工作,只需要拥有一个<code>GitHub</code>账号,下载好<code>PicGo</code>即可</p>
+<p><code>PicGo</code>下载链接:<a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/PicGo/releases">https://github.com/Molunerfinn/PicGo/releases</a></p>
+<h2 id="二、配置GitHub"><a href="#二、配置GitHub" class="headerlink" title="二、配置GitHub"></a>二、配置GitHub</h2><p>首先当然就是创建一个仓库用于储存图片了</p>
+<p>点击右上角头像打开你的<code>repositories</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Prolunar/BlogImg@main/img/QQ%E6%88%AA%E5%9B%BE20230411114255.png"></p>
+<p>接着点击<code>New</code>创建新仓库</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Prolunar/BlogImg@main/img/QQ%E6%88%AA%E5%9B%BE20230411114319.png"></p>
+<p>在<code>Repository name</code>中输入仓库名,例如我的仓库名就使用<code>BlogImg</code></p>
+<p>其中<code>Add a README file</code>一栏可选可不选,但仓库类型必须是<code>Public</code></p>
+<p>最后点<code>Create repository</code>创建仓库就行</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Prolunar/BlogImg@main/img/QQ%E6%88%AA%E5%9B%BE20230411114447.png"></p>
+<p>再点自己头像进设置</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Prolunar/BlogImg@main/img/QQ%E6%88%AA%E5%9B%BE20230411114503.png"></p>
+<p>选择<code>Developer settings</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Prolunar/BlogImg@main/img/QQ%E6%88%AA%E5%9B%BE20230411114517.png"></p>
+<p>再选择<code>Tokens (Classic)</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Prolunar/BlogImg@main/img/202304111451765.png"></p>
+<p>在右上角选择<code>Generate new token</code>,用下面<code>classic</code>的创建</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Prolunar/BlogImg@main/img/QQ%E6%88%AA%E5%9B%BE20230411114555.png"></p>
+<p><code>Note</code>中随便输个名字比如<code>图床</code></p>
+<p><code>Expiration</code>中选<code>Noexpiration</code></p>
+<p>再把下面的<code>repo</code>勾上</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Prolunar/BlogImg@main/img/202304111458678.png"></p>
+<p>完成后会出现一个仅显示一次的<code>Token</code>,记得妥善保管</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Prolunar/BlogImg@main/img/202304111508246.png"></p>
+<h2 id="三、配置PicGo"><a href="#三、配置PicGo" class="headerlink" title="三、配置PicGo"></a>三、配置PicGo</h2><p>直接去官网下载对应自己电脑系统的版本,安装.</p>
+<p>安装好后直接启动,如果无法启动可以尝试<code>打开管理员身份启动</code>or<code>兼容模式运行</code>.</p>
+<p>打开图床设置选择<code>GitHub</code></p>
+<ul>
+<li>图床配置名:随便输</li>
+<li>设定仓库名:<code>[github用户名]/[第一步新建的仓库名称]</code></li>
+<li>设定分支名:<code>main</code></li>
+<li>设定Token:第一步创建的<code>Token</code></li>
+<li>指定存储路径：可填可不填，如果填写<code>img/</code>，图片就会存储在<code>img</code>文件夹下</li>
+<li>设定自定义域名：https:&#x2F;&#x2F;<span></span>cdn.jsdelivr.net&#x2F;gh&#x2F;[github用户名]&#x2F;[仓库名]@main</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/Prolunar/BlogImg@main/img/202304111525967.png"></p>
+<p>完事!开传!</p>
+<blockquote>
+<p>原本github的自定义域名应该是：https:&#x2F;&#x2F;<span></span>raw.githubusercontent.com&#x2F;[username]&#x2F;[仓库名]</p>
+<p>因为国内访问速度较慢所以使用<code>jsdelivr</code>作为<code>cdn</code>加速</p>
+</blockquote>
+<h2 id="四、开始使用"><a href="#四、开始使用" class="headerlink" title="四、开始使用"></a>四、开始使用</h2><p>可以在<code>PicGo</code>的上传区直接上传图片,也可以集成<code>PicGo</code>到<code>typora</code></p>
+<p>在<code>typora</code>顶部菜单界面，选择“文件” - &gt; “偏好设置”，设置图片存储方式。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Prolunar/BlogImg@main/img/202304111600184.png"></p>
+<p>选择图片存储方式：<code>上传图片</code></p>
+<p>上传服务：<code>PicGo(app)</code></p>
+<p>PicGo路径：<code>picGo</code>安装的地址</p>
+<p>设置完成，点击<code>验证图片上传</code>，提示上传成功，即代表配置成功。</p>
+<h2 id="五、我遇到过的小问题"><a href="#五、我遇到过的小问题" class="headerlink" title="五、我遇到过的小问题"></a>五、我遇到过的小问题</h2><p>如果遇到上传失败,可以检查<code>PicGo设置</code>中的<code>设置Server</code></p>
+<p>确保<code>监听端口</code>为<code>36677</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Prolunar/BlogImg@main/img/202304111647310.png"></p>
+<p>有时候上传错误还可能是因为这张图片已经上传过一遍了,把<code>PicGo设置</code>中的<code>时间戳重命名</code>打开即可解决.</p>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/hexo/">hexo</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/%E7%BD%91%E7%AB%99/">网站</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/%E5%9B%BE%E5%BA%8A/">图床</a>
+        </span>
+      
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+    </div>
+    <div>
+      
+        <a href="/2023/03/26/%E5%88%B6%E4%BD%9C%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E7%9A%84%E5%BF%83%E5%BE%97%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E5%90%8C%E6%AD%A5%E3%80%81%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E8%AF%A5%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          制作个人网站的心得以及如何同步、遇到的问题该如何解决
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+<script src="https://giscus.app/client.js"
+        data-repo="Prolunar/Giscus"
+        data-repo-id="R_kgDOJORYIg"
+        data-category="General"
+        data-category-id="DIC_kwDOJORYIs4CVJRk"
+        data-mapping="url"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+  </div>
+</section>
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitor Count</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Totalview</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <span>© 2022</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/xbmlz" target="_blank" rel="noopener noreferrer">xbmlz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/xbmlz/hexo-theme-maple" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <iconify-icon class="fixed right-4 bottom-10 z-100 opacity-0" width="24" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+  
+<script src="/lib/clipboard.min.js"></script>
+
+
+
+<script src="/js/main.js"></script>
+
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+</body>
+
+</html>
