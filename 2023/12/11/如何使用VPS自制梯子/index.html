@@ -17,7 +17,7 @@
 
 
 
-<title>上头了 | Prolunar</title>
+<title>如何使用VPS自制梯子 | Prolunar</title>
 
 
 
@@ -182,37 +182,135 @@
   <main class="p-12">
     <!-- toc -->
 
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
 <section class="px-6 max-w-prose mx-auto md:px-0">
   <!-- header -->
   <header class="overflow-hidden pt-6 pb-6 md:pt-12">
     <div class="pt-4 md:pt-6">
       <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
-        上头了
+        如何使用VPS自制梯子
       </h1>
       <p class="mb-6">
         
       </p>
       <div>
         <section class="flex items-center gap-3 text-sm">
-          <time>2023-12-11 22:17:04</time>
+          <time>2023-12-11 17:49:18</time>
           <span class="text-gray-400">·</span>
-          <span>1 min</span>
+          <span>4 min</span>
           <span class="text-gray-400">·</span>
-          <span>164 words</span>
+          <span>1.2k words</span>
         </section>
       </div>
     </div>
   </header>
   <!-- content -->
   <article class="post-content mt-10 prose dark:prose-invert post-content">
-    <p>逆天了，敲代码这么上头的么，搞好了之后又想把评论功能给实现。。。。</p>
-<p>只能说一个人敲代码太难了，没人带遇见不懂的只能自己瞎琢磨，毕竟也不是科班的。</p>
-<p>原来Giscus的那个问题就是因为多打了两个空格，妈的白忙活一个多小时。</p>
-<p>好在最后问题是解决了。。。。。</p>
-<p>他妈的，以为弄完了，发现tags和categories没搞好，强迫症是这样的，这下四点半了</p>
-<p>看看能不能弄好，弄不好明天再说了</p>
-<p>可是不得不提，正月佳代子也太可爱了。</p>
-<p>好有感觉。</p>
+    <h1 id="一、前期准备"><a href="#一、前期准备" class="headerlink" title="一、前期准备"></a>一、前期准备</h1><h3 id="VPS"><a href="#VPS" class="headerlink" title="VPS"></a>VPS</h3><p>vps这里选择比较便宜的！主打一个性价比</p>
+<p>我选择了第一个好像是黑五优惠的，感觉性价比不错</p>
+<table>
+<thead>
+<tr>
+<th>RackNerd</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1x vCPU</td>
+<td>1x vCPU</td>
+</tr>
+<tr>
+<td>768 MB RAM</td>
+<td>2GB RAM</td>
+</tr>
+<tr>
+<td>15 GB SSD</td>
+<td>30GB SSD</td>
+</tr>
+<tr>
+<td>1 TB 月流量</td>
+<td>2.5T 月流量</td>
+</tr>
+<tr>
+<td>1 Gbps 带宽</td>
+<td>1 Gbps 带宽</td>
+</tr>
+<tr>
+<td>1 IPv4</td>
+<td>1 IPv4</td>
+</tr>
+<tr>
+<td>$10.18 &#x2F;年</td>
+<td>$16.98&#x2F;年</td>
+</tr>
+</tbody></table>
+<p>测测速度看看哪个节点快就选哪个，我这测试感觉芝加哥挺快的</p>
+<p>选完节点点击1000MB那个下载就完事了：<a target="_blank" rel="noopener" href="https://lg-lax02.racknerd.com/">测速网站</a></p>
+<p>其他还可以考虑像<font color=#00FFFF>CloudCone</font>这样的，但感觉不如上一个性价比</p>
+<h3 id="寻找-TLS1-3-x2F-H2-的网站"><a href="#寻找-TLS1-3-x2F-H2-的网站" class="headerlink" title="寻找 TLS1.3&#x2F;H2 的网站"></a>寻找 TLS1.3&#x2F;H2 的网站</h3><p>目标网站最低标准：国外网站，支持 TLSv1.3 与 H2，域名非跳转用</p>
+<p>加分项：IP 相近（更像，且延迟低），Server Hello 后的握手消息一起加密（如 dl.google.com），有 OCSP Stapling</p>
+<p>配置加分项：禁回国流量，TCP&#x2F;80、UDP&#x2F;443 也转发（REALITY 对外表现即为端口转发，目标 IP 冷门或许更好）</p>
+<p>可以使用这个网站：<a target="_blank" rel="noopener" href="https://v2rayssr.com/go?url=https://www.ssllabs.com/projects/index.html">点击访问</a> ，来寻找 <code>TLS1.3 / X25519 / H2</code> 的指向站点</p>
+<blockquote>
+<p>本来是想用vless+ws+tls+cdn中转这个方案的，可惜最后cdn是中转好了，节点怎么都ping不通，放弃了，还是使用Reality吧，Reality方案好像是用别人的域名做伪装，我找了个亚特兰大附近的域名。</p>
+</blockquote>
+<h1 id="二、设置"><a href="#二、设置" class="headerlink" title="二、设置"></a>二、设置</h1><h2 id="连接VPS"><a href="#连接VPS" class="headerlink" title="连接VPS"></a>连接VPS</h2><p>买完之后<font color=#00FFFF>RackNerd</font>会给邮箱里发控制面板的账号密码，以及root密码，用于ssh登录</p>
+<p>我这边选的系统是 Ubuntu 20.04，别的像debian\centos也可以，反正后台可以改系统。</p>
+<p>使用远程连接软件接入vps：我这边选择使用<a target="_blank" rel="noopener" href="https://github.com/nxshell/nxshell/blob/main/README-zh.md">NxShell</a>，这软件比较好看</p>
+<p>连接上ssh就可以进下一步了</p>
+<h3 id="更新及安装组件"><a href="#更新及安装组件" class="headerlink" title="更新及安装组件"></a>更新及安装组件</h3><p>Debian&#x2F;Ubuntu系统执行以下命令</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt update -y &amp;&amp; apt install curl wget -y</span><br></pre></td></tr></table></figure>
+
+<p>CentOS系统执行以下命令</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum update -y &amp;&amp; yum install curl wget -y</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="x-ui面板"><a href="#x-ui面板" class="headerlink" title="x-ui面板"></a>x-ui面板</h3><p>输入一键脚本</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash &lt;(curl -Ls https://raw.githubusercontent.com/FranzKafkaYu/x-ui/master/install.sh)</span><br></pre></td></tr></table></figure>
+
+<h3 id="x-ui管理命令"><a href="#x-ui管理命令" class="headerlink" title="x-ui管理命令"></a>x-ui管理命令</h3><p>x-ui - 显示管理菜单 (功能更多)<br>x-ui start - 启动 x-ui 面板<br>x-ui stop - 停止 x-ui 面板<br>x-ui restart - 重启 x-ui 面板<br>x-ui status - 查看 x-ui 状态<br>x-ui enable - 设置 x-ui 开机自启<br>x-ui disable - 取消 x-ui 开机自启<br>x-ui log - 查看 x-ui 日志<br>x-ui v2-ui - 迁移本机器的 v2-ui 账号数据至 x-ui<br>x-ui update - 更新 x-ui 面板<br>x-ui install - 安装 x-ui 面板<br>x-ui uninstall - 卸载 x-ui 面板</p>
+<p>连接ssh输入x-ui也可查看命令,访问 x-ui 面板的地址为 <code>http://ip:端口/面板url根路径</code></p>
+<h3 id="warp解锁v4-v6"><a href="#warp解锁v4-v6" class="headerlink" title="warp解锁v4 v6"></a>warp解锁v4 v6</h3><p>使用warp-go脚本解锁，不难</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -N https://gitlab.com/fscarmen/warp/-/raw/main/warp-go.sh &amp;&amp; bash warp-go.sh</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h3 id="部署-Reality-节点"><a href="#部署-Reality-节点" class="headerlink" title="部署 Reality 节点"></a>部署 Reality 节点</h3><p>不难，注意以下几点就行：</p>
+<p>协议：vless</p>
+<p>添加用户：flow选择xtls-rprx-vision</p>
+<p>勾选reality，目标网站与可选域名填上之前筛选的网站</p>
+<h1 id="三、一键端"><a href="#三、一键端" class="headerlink" title="三、一键端"></a>三、一键端</h1><p>最为推荐的一种方式，简单方便不费心，而且可以很无脑的生成sing-box，clash-meta，v2rayN，nekoray等通用链接格式。</p>
+<p>hysteria 2 +reality + vmess 一键脚本：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash &lt;(curl -fsSL https://github.com/liuoqu444/sing-box-reality-hysteria2/raw/main/reality_hy2_ws.sh)</span><br></pre></td></tr></table></figure>
+
+<p>关闭防火墙</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw <span class="built_in">disable</span> </span><br></pre></td></tr></table></figure>
+
+<p><strong>clash verge下载：</strong><a target="_blank" rel="noopener" href="https://github.com/zzzgydi/clash-verge/releases">https://github.com/zzzgydi/clash-verge/releases</a></p>
+<p>替换clash-meta.exe：<a target="_blank" rel="noopener" href="https://github.com/MetaCubeX/Clash.Meta/releases">https://github.com/MetaCubeX/Clash.Meta/releases</a></p>
+<hr>
+<p><strong>v2rasyn下载：</strong><a target="_blank" rel="noopener" href="https://github.com/2dust/v2rayN/releases">https://github.com/2dust/v2rayN/releases</a></p>
+<p>内核替换：<a target="_blank" rel="noopener" href="https://github.com/apernet/hysteria/releases/">https://github.com/apernet/hysteria/releases/</a></p>
+<h1 id="失败部分"><a href="#失败部分" class="headerlink" title="失败部分"></a>失败部分</h1><p>这部分做了半天没成功，放弃了</p>
+<p>最后选择使用<font color=#00FFFF>Vless + Reality协议 + Vision流控</font></p>
+<h3 id="域名"><a href="#域名" class="headerlink" title="域名"></a>域名</h3><p>还是主打性价比，<font color=#00FFFF>namesilo</font>六个数字的XYZ结尾域名1美元搞定</p>
+<p>后面听说<font color=#00FFFF>spaceship</font>也很便宜</p>
+<h3 id="cdn中转"><a href="#cdn中转" class="headerlink" title="cdn中转"></a>cdn中转</h3><p>需要先将域名托管到<font color=#00FFFF>Cloudflare</font>平台，可以帮助我们隐藏自己的真实IP地址，防止被墙。</p>
+<p>在注册完<font color=#00FFFF>Cloudflare</font>账号后，登录点击添加站点，输入我们注册的域名</p>
+<p>下面的计划选择免费就好，激活站点后把我们域名的DNS改成提供的DNS</p>
+<p>修改之后大概半小时左右就会生效，邮箱会接到邮件，同时再回到<font color=#00FFFF>Cloudflare</font>会显示：</p>
+<p><strong>好消息！Cloudflare 正在保护您的站点</strong></p>
+<p>这时就托管成功了，可以在DNS这栏选择添加二级域名，前面随意，把小黄云关掉就是停止中转，这时ping地址是原始ip，开启的话就会看到Cloudflare的地址了。</p>
+<p>在SSL&#x2F;TLS中把灵活改成完全就好了，中转设置完毕。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.naibabiji.com/tutorial/namesilo-yu-ming-jie-xi-geng-huan-dns-jiao-cheng.html">NameSilo域名解析和DNS服务器修改教程</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.pigji.com/875.html">Racknerd控制面板使用教程</a></p>
+</blockquote>
 
   </article>
   <!-- tag -->
@@ -220,11 +318,11 @@
     
       
         <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
-          <a href="/tags/%E5%90%90%E6%A7%BD/">吐槽</a>
+          <a href="/tags/VPS/">VPS</a>
         </span>
       
         <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
-          <a href="/tags/%E5%8F%91%E7%99%AB/">发癫</a>
+          <a href="/tags/%E6%A2%AF%E5%AD%90/">梯子</a>
         </span>
       
     
@@ -233,16 +331,11 @@
   <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
     <div>
       
-        <a href="/2023/03/26/%E5%88%B6%E4%BD%9C%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E7%9A%84%E5%BF%83%E5%BE%97%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E5%90%8C%E6%AD%A5%E3%80%81%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E8%AF%A5%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
-          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
-          制作个人网站的心得以及如何同步、遇到的问题该如何解决
-        </a>
-      
     </div>
     <div>
       
-        <a href="/2023/03/26/hello%20world/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
-          Hello World
+        <a href="/2023/08/11/%E5%85%B3%E4%BA%8ERVC%E7%9A%84%E4%B8%80%E4%BA%9B%E7%BB%8F%E9%AA%8C/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          关于RVC的一些经验
           <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
         </a>
       

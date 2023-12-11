@@ -17,7 +17,7 @@
 
 
 
-<title>Archives | Prolunar</title>
+<title>关于RVC的一些经验 | Prolunar</title>
 
 
 
@@ -180,141 +180,162 @@
 </div>
 
   <main class="p-12">
-    <section class="px-6 max-w-prose mx-auto gap-12 grid grid-cols-1">
-  <div class="flex flex-col h-48 items-center justify-center">
-    <h1 class="site-title text-4xl leading-relaxed">
-      Prolunar
-    </h1>
-    <p class="text-gray-500 mt-2">
-      记录下生活中的点点滴滴
-    </p>
-  </div>
-  
-  
-    
-    
-      <div class="relative pointer-events-none">
-        <span class="text-9xl opacity-10 absolute -left-11 -top-6 font-bold">2023</span>
+    <!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        关于RVC的一些经验
+      </h1>
+      <p class="mb-6">
+        
+      </p>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <time>2023-12-11 22:11:04</time>
+          <span class="text-gray-400">·</span>
+          <span>3 min</span>
+          <span class="text-gray-400">·</span>
+          <span>891 words</span>
+        </section>
       </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content mt-10 prose dark:prose-invert post-content">
+    <h1 id="一、RVC"><a href="#一、RVC" class="headerlink" title="一、RVC"></a>一、RVC</h1><h3 id="1、资源下载："><a href="#1、资源下载：" class="headerlink" title="1、资源下载："></a>1、资源下载：</h3><p>RVC开源github发布地址：</p>
+<p> <a target="_blank" rel="noopener" href="https://github.com/RVC-Project/Retrieval-based-Voice-Conversion-WebUI">https://github.com/RVC-Project/Retrieval-based-Voice-Conversion-WebUI</a></p>
+<p>NVIDIA Broadcast（输入声音降噪）：</p>
+<p><a target="_blank" rel="noopener" href="https://www.nvidia.cn/geforce/broadcasting/broadcast-app/">https://www.nvidia.cn/geforce/broadcasting/broadcast-app/</a></p>
+<p>Voicemeeter Potato（虚拟声卡）：</p>
+<p><a target="_blank" rel="noopener" href="https://vb-audio.com/Voicemeeter/potato.htm">https://vb-audio.com/Voicemeeter/potato.htm</a></p>
+<h3 id="2、使用说明："><a href="#2、使用说明：" class="headerlink" title="2、使用说明："></a>2、使用说明：</h3><p>RVC解压后点击<code>go-realtime-gui.bat</code>启动程序，一般来说会用<font color=#FF0000>花儿不哭</font>大佬版本，其他版本基本都是通过整合<font color=#FF0000>花儿不哭</font>版本制作的，如<font color=#FF0000>“小日子”</font>版。我这里用的是原版。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Prolunar/BlogImg@main/img/202311192246387.png"></p>
+<ul>
+<li><p>.pth文件：模型文件，用哪个选哪个就行。</p>
+</li>
+<li><p>.index文件：索引，没太大用。😋 甚至可以选个公用的，越好的模型越不需要index。</p>
+</li>
+<li><p>输入设备：选择你的麦克风，注意选以<font color=#00FFFF>MME</font>结尾的。</p>
+</li>
+<li><p>输出设备：选择跳线软件的Input端，比如用VM的话就是选<font color=#00FFFF>VoiceMeeter Input (VB-Audio Voi)</font>，注意选以<font color=#00FFFF>MME</font>结尾的。</p>
+</li>
+<li><p>响应阈值：大于这个分贝的声音才会被处理，一般调-48~-60</p>
+</li>
+<li><p>音调设置：一般男变女+12，女变男-12，声音越低需要越高，自己调</p>
+</li>
+<li><p>Index Rate:偏左接近底模，偏右接近数据集，没太大用。😋</p>
+</li>
+<li><p>响度因子：简单来说就是调音量，看着调。</p>
+</li>
+<li><p>高音算法：</p>
+<p>占用<font color=#8B00FF>CPU</font>  pm:对唱歌优化好，较快 harvest:对低音优化好，较慢</p>
+<p>占用<font color=#8B00FF>GPU</font>  crepe:效果好，占用较多负载 rmvpe:较快，占用少</p>
+</li>
+<li><p>采样长度：单位为秒，数值越低延迟越低，负载越高。</p>
+</li>
+<li><p>harvest进程数：</p>
+<p>进程数会音响音质，如果对音质有要求，进程数不建议大于4。</p>
+<p>如果index&#x3D;0，进程数不会太影响CPU占用率。</p>
+<p>如果index不等于0，则CPU占用率会随着进程数几何倍数增加。</p>
+<p>以13700K为例，index&#x3D;0，8进程，0.12采样，低延迟CPU占用不到30%，但是音质会略微有嘶哑感</p>
+<p>index&#x3D;0.01，0.12采样，8进程 cpu占用100% ，4进程占用50%。</p>
+<p>决定音高算法最高占用多少系统线程（最多吃多少比例CPU） 如果有其他任务也要吃CPU，会影响你的工作（比如打游戏），则不宜拉太高； 调低了推理延迟会增大，如果推理延迟不能满足需求则应拉高采样长度，或者更换音高算法； 如果推理延迟已经能满足变声延迟的需求，则建议该选项进行微调，越低越好。</p>
+</li>
+<li><p>淡入淡出长度：影响不大，看着拉</p>
+</li>
+<li><p>额外推理时长：数字越大效果越好，负载越小，一般至少设置<font color=#00FFFF>1</font>。占用<font color=#8B00FF>GPU</font></p>
+</li>
+</ul>
+<h3 id="3、输入输出通道设置："><a href="#3、输入输出通道设置：" class="headerlink" title="3、输入输出通道设置："></a>3、输入输出通道设置：</h3><p>懒得写了，一图流：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Prolunar/BlogImg@main/img/202311192351072.png"></p>
+<p>稍微进阶：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Prolunar/BlogImg@main/img/202311192328199.png"></p>
+<p>跳线：独立声卡走机架设置，后面独立篇章详细写。</p>
+<h1 id="二、训练"><a href="#二、训练" class="headerlink" title="二、训练"></a>二、训练</h1><p>MDX23C发布地址：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/jarredou/MVSEP-MDX23-Colab_v2">https://github.com/jarredou/MVSEP-MDX23-Colab_v2</a></p>
+<h3 id="这里只讨论AI翻唱，不讨论炼丹"><a href="#这里只讨论AI翻唱，不讨论炼丹" class="headerlink" title="这里只讨论AI翻唱，不讨论炼丹"></a>这里只讨论AI翻唱，不讨论炼丹</h3><p>点击<code>go-web.bat</code>启动</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Prolunar/BlogImg@main/img/202311200002007.png"></p>
+<p>人声分离：一般来说用<font color=#00FFFF>3hp</font>（有人声就分离）和<font color=#00FFFF>5hp</font>（带和声的情况下只分离主人声）</p>
+<p>目前<font color=#00FFFF>3hp</font>被<font color=#00FFFF>MDX23C</font>薄纱</p>
+<p>在<a target="_blank" rel="noopener" href="https://mvsep.com/zh">这个网站</a>可以免费试用<font color=#00FFFF>MDX23C</font></p>
+<h3 id="去混响："><a href="#去混响：" class="headerlink" title="去混响："></a>去混响：</h3><p>回到分离人声界面，选择混响模型，首推<font color=#00FFFF>DeEchoDeReverb</font></p>
+<p>可以使用<font color=#00FFFF>MDX23C</font>👉<font color=#00FFFF>去混响</font>👉<font color=#00FFFF>HP5</font></p>
+<h3 id="让AI唱起来！"><a href="#让AI唱起来！" class="headerlink" title="让AI唱起来！"></a>让AI唱起来！</h3><p>回到推理界面，选择好模型对应的pth文件与index文件</p>
+<p>算法首推rmvpe，其次crepe，点击转换即可</p>
+<h1 id="三、跳线"><a href="#三、跳线" class="headerlink" title="三、跳线"></a>三、跳线</h1><p>这个之后再讲吧，太多了，写不动了。</p>
+<blockquote>
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv24861810/">RVC小白教程-风妈胎教版</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.qq.com/doc/DRVZldlZOckptT0pJ">AI声音类项目汇总以及详细教程</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1K94y1G7F1">RVC AI翻唱个人经验分享</a></p>
+</blockquote>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
     
-    <a href="/2023/12/11/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8VPS%E8%87%AA%E5%88%B6%E6%A2%AF%E5%AD%90/">
-      <header>
-        <h2 class="font-bold text-xl">
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/RVC/">RVC</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/%E5%8F%98%E5%A3%B0/">变声</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/AI/">AI</a>
+        </span>
+      
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+        <a href="/2023/12/11/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8VPS%E8%87%AA%E5%88%B6%E6%A2%AF%E5%AD%90/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
           如何使用VPS自制梯子
-        </h2>
-      </header>
-      <section class="text-gray-400 my-1 text-sm time">
-        <p class="line-clamp-4">
-          
-        </p>
-        <p class="line-clamp-4">
-          Dec 11
-          ·
-          4 min
-        </p>
-      </section>
-    </a>
-  
-    
-    
-    <a href="/2023/08/11/%E5%85%B3%E4%BA%8ERVC%E7%9A%84%E4%B8%80%E4%BA%9B%E7%BB%8F%E9%AA%8C/">
-      <header>
-        <h2 class="font-bold text-xl">
-          关于RVC的一些经验
-        </h2>
-      </header>
-      <section class="text-gray-400 my-1 text-sm time">
-        <p class="line-clamp-4">
-          
-        </p>
-        <p class="line-clamp-4">
-          Aug 11
-          ·
-          3 min
-        </p>
-      </section>
-    </a>
-  
-    
-    
-    <a href="/2023/04/11/%E5%A6%82%E4%BD%95%E5%88%B6%E4%BD%9C%E4%B8%AA%E4%BA%BA%E5%9B%BE%E5%BA%8A/">
-      <header>
-        <h2 class="font-bold text-xl">
+        </a>
+      
+    </div>
+    <div>
+      
+        <a href="/2023/04/11/%E5%A6%82%E4%BD%95%E5%88%B6%E4%BD%9C%E4%B8%AA%E4%BA%BA%E5%9B%BE%E5%BA%8A/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
           如何制作个人图床
-        </h2>
-      </header>
-      <section class="text-gray-400 my-1 text-sm time">
-        <p class="line-clamp-4">
-          
-        </p>
-        <p class="line-clamp-4">
-          Apr 11
-          ·
-          2 min
-        </p>
-      </section>
-    </a>
-  
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
     
-    
-    <a href="/2023/03/26/%E5%88%B6%E4%BD%9C%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E7%9A%84%E5%BF%83%E5%BE%97%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E5%90%8C%E6%AD%A5%E3%80%81%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E8%AF%A5%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3/">
-      <header>
-        <h2 class="font-bold text-xl">
-          制作个人网站的心得以及如何同步、遇到的问题该如何解决
-        </h2>
-      </header>
-      <section class="text-gray-400 my-1 text-sm time">
-        <p class="line-clamp-4">
-          
-        </p>
-        <p class="line-clamp-4">
-          Mar 26
-          ·
-          8 min
-        </p>
-      </section>
-    </a>
-  
-    
-    
-    <a href="/2023/03/26/%E4%B8%8A%E5%A4%B4%E4%BA%86/">
-      <header>
-        <h2 class="font-bold text-xl">
-          上头了
-        </h2>
-      </header>
-      <section class="text-gray-400 my-1 text-sm time">
-        <p class="line-clamp-4">
-          
-        </p>
-        <p class="line-clamp-4">
-          Mar 26
-          ·
-          1 min
-        </p>
-      </section>
-    </a>
-  
-    
-    
-    <a href="/2023/03/26/hello%20world/">
-      <header>
-        <h2 class="font-bold text-xl">
-          Hello World
-        </h2>
-      </header>
-      <section class="text-gray-400 my-1 text-sm time">
-        <p class="line-clamp-4">
-          
-        </p>
-        <p class="line-clamp-4">
-          Mar 26
-          ·
-          1 min
-        </p>
-      </section>
-    </a>
-  
+<script src="https://giscus.app/client.js"
+        data-repo="Prolunar/Giscus"
+        data-repo-id="R_kgDOJORYIg"
+        data-category="General"
+        data-category-id="DIC_kwDOJORYIs4CVJRk"
+        data-mapping="url"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+  </div>
 </section>
 
   </main>
